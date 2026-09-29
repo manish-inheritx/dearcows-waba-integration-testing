@@ -9,7 +9,6 @@ export function UsersList({
   onCopyText,
 }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('ALL'); // ALL, LOW_BALANCE, POSITIVE, DAILY
   const [viewMode, setViewMode] = useState('TABLE'); // TABLE, CARDS
   const [copiedKey, setCopiedKey] = useState(null);
 
@@ -31,15 +30,9 @@ export function UsersList({
 
       if (!matchesSearch) return false;
 
-      // Filter tabs
-      const bal = Number(u.balance || 0);
-      if (filterType === 'LOW_BALANCE') return bal <= 0;
-      if (filterType === 'POSITIVE') return bal > 0;
-      if (filterType === 'DAILY') return (u.deliveryType || '').toLowerCase() === 'daily';
-
       return true;
     });
-  }, [users, searchTerm, filterType]);
+  }, [users, searchTerm]);
 
   const stats = useMemo(() => {
     const total = users.length;
@@ -162,33 +155,6 @@ export function UsersList({
             </button>
           )}
         </div>
-
-        <div className="filter-tabs-row">
-          <button
-            className={`filter-tab ${filterType === 'ALL' ? 'active' : ''}`}
-            onClick={() => setFilterType('ALL')}
-          >
-            All Users ({users.length})
-          </button>
-          <button
-            className={`filter-tab tab-low-balance ${filterType === 'LOW_BALANCE' ? 'active' : ''}`}
-            onClick={() => setFilterType('LOW_BALANCE')}
-          >
-            ⚠️ Low Balance (≤ 0L) ({stats.lowBalCount})
-          </button>
-          <button
-            className={`filter-tab tab-positive ${filterType === 'POSITIVE' ? 'active' : ''}`}
-            onClick={() => setFilterType('POSITIVE')}
-          >
-            ✓ Safe Balance ({stats.safeBalCount})
-          </button>
-          <button
-            className={`filter-tab ${filterType === 'DAILY' ? 'active' : ''}`}
-            onClick={() => setFilterType('DAILY')}
-          >
-            Daily Delivery
-          </button>
-        </div>
       </div>
 
       {/* Main Table or Card Grid */}
@@ -213,10 +179,9 @@ export function UsersList({
             <thead>
               <tr>
                 <th>User / Name</th>
-                <th>Phone & Chat</th>
+                <th>Phone</th>
                 <th>Balance (Liters)</th>
                 <th>Regular Qty</th>
-                <th>Delivery</th>
                 <th>Mongo ID</th>
                 <th style={{ textAlign: 'right' }}>Ledger Actions</th>
               </tr>
@@ -225,8 +190,6 @@ export function UsersList({
               {filteredUsers.map((user) => {
                 const bal = Number(user.balance || 0);
                 const isLow = bal <= 0;
-                const phoneDigits = String(user.phoneNumber || '').replace(/\D/g, '');
-                const waUrl = phoneDigits ? `https://wa.me/91${phoneDigits}` : null;
 
                 return (
                   <tr key={user._id} className={isLow ? 'row-low-balance' : ''}>
@@ -267,19 +230,6 @@ export function UsersList({
                               </svg>
                             )}
                           </button>
-                          {waUrl && (
-                            <a
-                              href={waUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="btn-cell-icon wa-link"
-                              title="Open in WhatsApp Web"
-                            >
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                              </svg>
-                            </a>
-                          )}
                         </div>
                       </div>
                     </td>
@@ -301,13 +251,6 @@ export function UsersList({
                     {/* Regular Qty */}
                     <td>
                       <span className="font-mono">{user.regularQuantity ?? 1} L / order</span>
-                    </td>
-
-                    {/* Delivery */}
-                    <td>
-                      <span className="badge badge-neutral">
-                        {user.deliveryType || 'Standard'}
-                      </span>
                     </td>
 
                     {/* Mongo ID */}
