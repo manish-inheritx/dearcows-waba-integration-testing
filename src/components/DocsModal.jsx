@@ -24,6 +24,9 @@ export function DocsModal({ isOpen, onClose, baseUrl = '/api/v3/taskRunner', onC
   -H "Content-Type: application/json" \\
   -d '{"userId": "64c9d81f2b1a9c30f4e1a001", "amount": 5}'`;
 
+  const curl4 = `curl -X POST "${cleanBase}/clearWhatsappQueue" \\
+  -H "Accept: application/json"`;
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-container docs-modal-container" onClick={(e) => e.stopPropagation()}>
@@ -153,6 +156,32 @@ export function DocsModal({ isOpen, onClose, baseUrl = '/api/v3/taskRunner', onC
               <pre className="curl-pre font-mono">{curl3}</pre>
             </div>
           </div>
+
+          {/* Endpoint 4 */}
+          <div className="doc-endpoint-card">
+            <div className="doc-endpoint-header">
+              <div className="endpoint-method-pill post">POST</div>
+              <code className="endpoint-path">/clearWhatsappQueue</code>
+            </div>
+            <div className="doc-section-title">4. Clear WhatsApp Queue</div>
+            <p className="doc-text">
+              Instantly clears all pending and processing notifications from the queue. Returns exactly how many documents were deleted.
+            </p>
+
+            <div className="curl-snippet-box">
+              <div className="curl-header">
+                <span>cURL Example</span>
+                <button
+                  className="btn-copy-code"
+                  onClick={() => handleCopy(curl4, 4, 'API 4 cURL')}
+                >
+                  {copiedIndex === 4 ? '✓ Copied' : 'Copy cURL'}
+                </button>
+              </div>
+              <pre className="curl-pre font-mono">{curl4}</pre>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

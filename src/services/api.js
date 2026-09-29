@@ -169,3 +169,17 @@ export async function updateUserBalance({ userId, amount, config, onLogEntry }) 
     onLogEntry,
   });
 }
+
+/**
+ * 4. Clear WhatsApp Queue
+ * POST /api/v3/taskRunner/clearWhatsappQueue
+ */
+export async function clearWhatsappQueue({ config, onLogEntry }) {
+  return executeApiCall({
+    endpoint: '/clearWhatsappQueue',
+    method: 'POST',
+    body: null,
+    config,
+    onLogEntry,
+  });
+}

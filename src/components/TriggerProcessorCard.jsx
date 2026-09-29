@@ -3,6 +3,8 @@ import { useState } from 'react';
 export function TriggerProcessorCard({
   onTrigger,
   isTriggering,
+  onClearQueue,
+  isClearingQueue,
   lastTriggerResult,
   autoRefreshUsers,
   onToggleAutoRefresh,
@@ -58,29 +60,57 @@ export function TriggerProcessorCard({
 
         {/* Action Row */}
         <div className="trigger-action-bar">
-          <button
-            className="btn-trigger-action"
-            onClick={onTrigger}
-            disabled={isTriggering}
-            id="trigger-waba-queue-btn"
-          >
-            {isTriggering ? (
-              <>
-                <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-                  <path d="M12 2a10 10 0 0 1 10 10" />
-                </svg>
-                <span>Dispatching Queue Processor...</span>
-              </>
-            ) : (
-              <>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-                <span>Trigger Queue Processor</span>
-              </>
-            )}
-          </button>
+          <div className="trigger-button-group" style={{ display: 'flex', gap: '10px' }}>
+            <button
+              className="btn-trigger-action"
+              onClick={onTrigger}
+              disabled={isTriggering || isClearingQueue}
+              id="trigger-waba-queue-btn"
+            >
+              {isTriggering ? (
+                <>
+                  <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                    <path d="M12 2a10 10 0 0 1 10 10" />
+                  </svg>
+                  <span>Dispatching...</span>
+                </>
+              ) : (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  <span>Trigger Processor</span>
+                </>
+              )}
+            </button>
+
+            <button
+              className="btn-trigger-action"
+              style={{ backgroundColor: '#dc2626' }}
+              onClick={onClearQueue}
+              disabled={isClearingQueue || isTriggering}
+              title="Clear all pending items from the WhatsApp queue"
+            >
+              {isClearingQueue ? (
+                <>
+                  <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                    <path d="M12 2a10 10 0 0 1 10 10" />
+                  </svg>
+                  <span>Clearing...</span>
+                </>
+              ) : (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                  <span>Clear Queue</span>
+                </>
+              )}
+            </button>
+          </div>
 
           <label className="checkbox-label" title="Automatically call getWabaUsers after triggering">
             <input
@@ -88,7 +118,7 @@ export function TriggerProcessorCard({
               checked={autoRefreshUsers}
               onChange={(e) => onToggleAutoRefresh(e.target.checked)}
             />
-            <span>Auto-refresh users after trigger</span>
+            <span>Auto-refresh</span>
           </label>
         </div>
 

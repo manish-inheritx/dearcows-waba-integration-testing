@@ -14,6 +14,7 @@ import {
   triggerWhatsappQueueProcessor,
   getWabaUsers,
   updateUserBalance,
+  clearWhatsappQueue,
 } from './services/api';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
   const [users, setUsers] = useState([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const [isTriggeringQueue, setIsTriggeringQueue] = useState(false);
+  const [isClearingQueue, setIsClearingQueue] = useState(false);
   const [lastTriggerResult, setLastTriggerResult] = useState(null);
   const [autoRefreshUsers, setAutoRefreshUsers] = useState(true);
 
@@ -163,6 +165,42 @@ export default function App() {
     }
   };
 
+  const handleClearQueue = async () => {
+    setIsClearingQueue(true);
+    setLastTriggerResult(null);
+
+    try {
+      const res = await clearWhatsappQueue({
+        config,
+        onLogEntry: handleLogEntry,
+      });
+
+      setLastTriggerResult({
+        error: false,
+        timestamp: new Date().toLocaleTimeString(),
+        data: res,
+        message: res.message || 'Queue cleared successfully.',
+      });
+
+      addToast(
+        'Queue Cleared',
+        res.message || 'WhatsApp notification queue has been cleared.',
+        'success'
+      );
+    } catch (err) {
+      console.error('Clear queue error:', err);
+      setLastTriggerResult({
+        error: true,
+        timestamp: new Date().toLocaleTimeString(),
+        data: err.response || null,
+        message: err.message || 'Failed to clear queue.',
+      });
+      addToast('Clear Failed', err.message, 'error');
+    } finally {
+      setIsClearingQueue(false);
+    }
+  };
+
   // API 3: Update User Balance (from Modal)
   const handleUpdateUserBalance = async ({ userId, amount, user }) => {
     setIsUpdatingBalance(true);
@@ -285,6 +323,8 @@ export default function App() {
         <TriggerProcessorCard
           onTrigger={handleTriggerQueue}
           isTriggering={isTriggeringQueue}
+          onClearQueue={handleClearQueue}
+          isClearingQueue={isClearingQueue}
           lastTriggerResult={lastTriggerResult}
           autoRefreshUsers={autoRefreshUsers}
           onToggleAutoRefresh={setAutoRefreshUsers}
