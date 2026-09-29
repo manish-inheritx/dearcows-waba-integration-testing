@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { DEFAULT_BASE_URL } from '../services/api';
 
+const envBackendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:3015').replace(/\/+$/, '');
+
 const PRESET_URLS = [
-  { label: 'Local 3015 (Default)', url: 'http://localhost:3015/api/v3/taskRunner', desc: 'Direct Node backend port 3015' },
-  { label: 'Vite Proxy', url: '/api/v3/taskRunner', desc: 'Proxies /api through Vite to port 3015' },
+  { label: 'Local (Env Default)', url: `${envBackendUrl}/api/v3/taskRunner`, desc: `Direct Node backend at ${envBackendUrl}` },
+  { label: 'Vite Proxy', url: '/api/v3/taskRunner', desc: `Proxies /api through Vite to ${envBackendUrl}` },
   { label: 'Local 5000', url: 'http://localhost:5000/api/v3/taskRunner', desc: 'Node backend port 5000' },
   { label: 'Local 3000', url: 'http://localhost:3000/api/v3/taskRunner', desc: 'Node backend port 3000' },
 ];
@@ -141,7 +143,7 @@ export function ConfigBar({
             <line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
           <span>
-            <strong>Tip:</strong> Using <code>/api/v3/taskRunner</code> proxies requests through Vite dev server to <code>http://localhost:3015</code> avoiding browser CORS issues.
+            <strong>Tip:</strong> Using <code>/api/v3/taskRunner</code> proxies requests through Vite dev server to <code>{envBackendUrl}</code> avoiding browser CORS issues.
           </span>
         </div>
       </div>

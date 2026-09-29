@@ -1,7 +1,8 @@
 const STORAGE_KEY_BASE_URL = 'waba_qa_base_url';
 const STORAGE_KEY_AUTH_TOKEN = 'waba_qa_auth_token';
 
-export const DEFAULT_BASE_URL = 'http://localhost:3015/api/v3/taskRunner';
+const envBackendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:3015').replace(/\/+$/, '');
+export const DEFAULT_BASE_URL = `${envBackendUrl}/api/v3/taskRunner`;
 
 export function getStoredConfig() {
   const stored = localStorage.getItem(STORAGE_KEY_BASE_URL);
