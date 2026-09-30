@@ -8,6 +8,7 @@ import { UserBalanceModal } from './components/UserBalanceModal';
 import { ActivityConsole } from './components/ActivityConsole';
 import { DocsModal } from './components/DocsModal';
 import { ToastContainer } from './components/Toast';
+import { QueueStatusModal } from './components/QueueStatusModal';
 import {
   getStoredConfig,
   saveStoredConfig,
@@ -30,6 +31,7 @@ export default function App() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const [isDocsOpen, setIsDocsOpen] = useState(false);
+  const [isQueueStatusModalOpen, setIsQueueStatusModalOpen] = useState(false);
   const [selectedUserForModal, setSelectedUserForModal] = useState(null);
   const [isUpdatingBalance, setIsUpdatingBalance] = useState(false);
   const [isPinging, setIsPinging] = useState(false);
@@ -325,6 +327,7 @@ export default function App() {
           isTriggering={isTriggeringQueue}
           onClearQueue={handleClearQueue}
           isClearingQueue={isClearingQueue}
+          onViewQueueStatus={() => setIsQueueStatusModalOpen(true)}
           lastTriggerResult={lastTriggerResult}
           autoRefreshUsers={autoRefreshUsers}
           onToggleAutoRefresh={setAutoRefreshUsers}
@@ -366,6 +369,13 @@ export default function App() {
         onClose={() => setIsDocsOpen(false)}
         baseUrl={config.baseUrl}
         onCopyText={(msg) => addToast('Copied', msg, 'info')}
+      />
+
+      {/* API 5: Queue Status Modal */}
+      <QueueStatusModal
+        isOpen={isQueueStatusModalOpen}
+        onClose={() => setIsQueueStatusModalOpen(false)}
+        config={config}
       />
 
       {/* Toast Notification Container */}

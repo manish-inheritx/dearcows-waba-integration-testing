@@ -183,3 +183,17 @@ export async function clearWhatsappQueue({ config, onLogEntry }) {
     onLogEntry,
   });
 }
+
+/**
+ * 5. Get WhatsApp Queue Status
+ * GET /api/v3/taskRunner/getWhatsappQueueStatus
+ */
+export async function getWhatsappQueueStatus({ config, onLogEntry }) {
+  return executeApiCall({
+    endpoint: '/getWhatsappQueueStatus',
+    method: 'GET',
+    body: null,
+    config,
+    onLogEntry,
+  });
+}

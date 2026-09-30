@@ -27,6 +27,9 @@ export function DocsModal({ isOpen, onClose, baseUrl = '/api/v3/taskRunner', onC
   const curl4 = `curl -X POST "${cleanBase}/clearWhatsappQueue" \\
   -H "Accept: application/json"`;
 
+  const curl5 = `curl -X GET "${cleanBase}/getWhatsappQueueStatus" \\
+  -H "Accept: application/json"`;
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-container docs-modal-container" onClick={(e) => e.stopPropagation()}>
@@ -179,6 +182,31 @@ export function DocsModal({ isOpen, onClose, baseUrl = '/api/v3/taskRunner', onC
                 </button>
               </div>
               <pre className="curl-pre font-mono">{curl4}</pre>
+            </div>
+          </div>
+
+          {/* Endpoint 5 */}
+          <div className="doc-endpoint-card">
+            <div className="doc-endpoint-header">
+              <div className="endpoint-method-pill get">GET</div>
+              <code className="endpoint-path">/getWhatsappQueueStatus</code>
+            </div>
+            <div className="doc-section-title">5. Get WhatsApp Queue Status</div>
+            <p className="doc-text">
+              Fetches all items currently in the database queue, sorted by newest first. Includes logs from Celitix and the delivery status of each item.
+            </p>
+
+            <div className="curl-snippet-box">
+              <div className="curl-header">
+                <span>cURL Example</span>
+                <button
+                  className="btn-copy-code"
+                  onClick={() => handleCopy(curl5, 5, 'API 5 cURL')}
+                >
+                  {copiedIndex === 5 ? '✓ Copied' : 'Copy cURL'}
+                </button>
+              </div>
+              <pre className="curl-pre font-mono">{curl5}</pre>
             </div>
           </div>
 
